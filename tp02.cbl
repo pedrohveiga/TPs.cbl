@@ -25,6 +25,11 @@
        77 wsmascvldep PIC ZZZ,99.
        77 wsmascvlhr PIC ZZZ,99.
 
+       77 wsmascbto PIC ZZ.ZZZ,ZZ.
+       77 wsmascliq PIC ZZ.ZZZ,ZZ.
+       77 wsmascinss PIC ZZ.ZZZ,ZZ.
+       77 wsmascir PIC ZZ.ZZZ,ZZ.
+
        01 nome.
          05 wsmascnm PIC A(20).
          05 wsmascsobnm PIC A(30).
@@ -97,6 +102,12 @@
            MOVE wsqtdep to wsmascqtdep.
            MOVE wsvldep to wsmascvldep.
            MOVE wsvlhr to wsmascvlhr.
+
+           MOVE wsbto to wsmascbto.
+           MOVE wsliq to wsmascliq.
+           MOVE wsinss to wsmascinss.
+           MOVE wsir to wsmascir.
+
            DISPLAY limpatela.
        SAIDA.
            DISPLAY "TP02 - CALCULO DE SALARIO" at 0123.
@@ -107,10 +118,10 @@
            DISPLAY "QTDE H/TRABALHADAS: " at 0703 wsmascqthr at 0723.
            DISPLAY "QTDE DE DEP: " at 0803 wsmascqtdep at 0823.
            DISPLAY " ".
-           DISPLAY "SALARIO BRUTO: " at 1003 wsbto at 1023.
-           DISPLAY "INSS: " at 1103 wsinss at 1123.
-           DISPLAY "IRRF: " at 1203 wsir at 1223. 
-           DISPLAY "SALARIO LIQUIDO: " at 1303 wsliq at 1323.
+           DISPLAY "SALARIO BRUTO: " at 1003 wsmascbto at 1023.
+           DISPLAY "INSS: " at 1103 wsmascinss at 1123.
+           DISPLAY "IRRF: " at 1203 wsmascir at 1223. 
+           DISPLAY "SALARIO LIQUIDO: " at 1303 wsmascliq at 1323.
            DISPLAY " ".
            DISPLAY wsmascnm at 1501.
            DISPLAY wsmascsobnm at 1521.
