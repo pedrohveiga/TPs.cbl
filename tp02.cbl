@@ -1,6 +1,6 @@
       ******************************************************************
       * Author: Pedro Veiga
-      * Date: 01/09/2023
+      * Date: 17/09/2023
       * Purpose: TP02 COBOL
       * Tectonics: cobc
       ******************************************************************
@@ -17,84 +17,107 @@
       *----------------------------------------------------------------*
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-      *VARIÁVEIS COM MASCARA
+      *VARIAVEIS COM MASCARA
 
        77 wspront PIC X(9).
-       77 wsvlhr PIC 999V99.
-       77 wsqthr PIC 9(3).
-       77 wsqtdep PIC 99.
-       77 wsvldep PIC 999V99.
-       77 wstemp PIC 99999V99.
+       77 wsmascqthr PIC ZZZ.
+       77 wsmascqtdep PIC ZZ.
+       77 wsmascvldep PIC ZZZ,99.
+       77 wsmascvlhr PIC ZZZ,99.
 
        01 nome.
-           05 wsnm PIC A(20).
-           05 wssobnm PIC A(30).
+         05 wsmascnm PIC A(20).
+         05 wsmascsobnm PIC A(30).
+       
+      *VARIAVEIS PARA CALCULO
+
+       77 wsvlhr PIC 999V99 value zero.
+       77 wsqthr PIC 9(3).
+       77 wsqtdep PIC 99.
+       77 wsvldep PIC 999V99 value zero.
+       77 wstemp PIC 99999V99 value zero.
+
        01 salario.
-           05 wsbto PIC 99999V99.
-           05 wsliq PIC 99999V99.
-           05 wsref PIC 99999V99.
-           05 wsinss PIC 99999V99.
-           05 wsir PIC 99999V99.
-
-      *VARIÁVEIS PARA CALCULO
-
+         05 wsbto PIC 99999V99 value zero.
+         05 wsliq PIC 99999V99 value zero.
+         05 wsref PIC 99999V99 value zero.
+         05 wsinss PIC 99999V99 value zero.
+         05 wsir PIC 99999V99 value zero.
 
        SCREEN SECTION.
        01 limpatela.
-           05 BLANK SCREEN.
+           05 blank screen.
+
 
       *----------------------------------------------------------------*
        PROCEDURE DIVISION.
-
        ENTRADA.
-       DISPLAY "Digite seu nome: " WITH NO ADVANCING.
-       ACCEPT wsnm WITH PROMPT CHARACTER is "-".
-       DISPLAY "Digite seu sobrenome: " WITH NO ADVANCING.
-       ACCEPT wssobnm.
-       DISPLAY "Digite seu prontuario: " WITH NO ADVANCING.
-       ACCEPT wspront.
-       DISPLAY "Digite o valor hora: R$" WITH NO ADVANCING.
-       ACCEPT wsvlhr.
-       DISPLAY "Digite qt de horas trabalhadas: " WITH NO ADVANCING.
-       ACCEPT wsqthr.
-       DISPLAY "Digite a qt de dependentes: " WITH NO ADVANCING.
-       ACCEPT wsqtdep.
-       DISPLAY "Digite o valor do dependente: " WITH NO ADVANCING.
-       ACCEPT wsvldep.
-       DISPLAY LIMPATELA.
+           DISPLAY "Digite seu nome: " no advancing.
+           ACCEPT wsmascnm at 0118 with prompt character is "_" with 
+           required.
+           DISPLAY " ".
+           DISPLAY "Digite seu sobrenome: " no advancing.
+           ACCEPT wsmascsobnm at 0223 with prompt character is "_" with 
+           required.
+           DISPLAY " ".
+           DISPLAY "Digite seu prontuario: " no advancing.
+           ACCEPT wspront at 0324 with prompt character is "_" required.
+           DISPLAY " ".
+           DISPLAY "Digite o valor hora: R$" no advancing
+           ACCEPT wsmascvlhr at 0424 with prompt character is "_" with 
+           required.
+           DISPLAY " ".
+           DISPLAY "Digite qt de horas trabalhadas: " no advancing.
+           ACCEPT wsmascqthr at 0533 with required.
+           DISPLAY " ".
+           DISPLAY "Digite a qt de dependentes: " no advancing.
+           ACCEPT wsmascqtdep at 0629 with prompt character is "_" with 
+           required.
+           DISPLAY " ".
+           DISPLAY "Digite o valor do dependente: R$" no advancing.
+           ACCEPT wsmascvldep at 0733 with prompt character is "_" with 
+           required.
+           DISPLAY " ".
+
+           MOVE wsmascqthr TO wsqthr.
+           MOVE wsmascqtdep to wsqtdep.
+           MOVE wsmascvldep to wsvldep.
+           MOVE wsmascvlhr to wsvlhr.
 
        CALCULOS.
-      *Usados no TP01:
-      *MULTIPLY wsvalorhora by wsqthoras GIVING wsbruto.
-      *MULTIPLY wsbruto by 0,14 GIVING wsdescontoinss.
-      *MULTIPLY wsbruto by 0,275 GIVING wsir.
-      *SUBTRACT wsdescontoinss from wsbruto GIVING wsref.
-      *SUBTRACT wsir from wsref GIVING wsliquido.
-      *MULTIPLY wsvalordependente by wsqtdependentes GIVING wstemp.
-      *ADD wsliquido to wstemp GIVING wsliquido.
+           COMPUTE wsbto = wsvlhr * wsqthr.
+           COMPUTE wsinss = wsbto * 0,14.
+           COMPUTE wsir = wsbto * 0,275.
+           COMPUTE wsref = wsbto - wsinss.
+           COMPUTE wsliq = wsref - wsir.
+           COMPUTE wstemp = wsvldep * wsqtdep.
+           COMPUTE wsliq = wsliq + wstemp.
 
-      *Usados no TP02:
-       COMPUTE wsbto = wsvlhr*wsqthr.
-       COMPUTE wsinss = wsbto * 0,14.
-       COMPUTE wsir = wsbto * 0,275.
-       COMPUTE wsref = wsbto - wsinss.
-       COMPUTE wsliq = wsref - wsir.
-       COMPUTE wstemp = wsvldep * wsqtdep.
-       COMPUTE wsliq  = wsliq + wstemp.
-
+           MOVE wsqthr to wsmascqthr.
+           MOVE wsqtdep to wsmascqtdep.
+           MOVE wsvldep to wsmascvldep.
+           MOVE wsvlhr to wsmascvlhr.
+           DISPLAY limpatela.
        SAIDA.
-      *DISPLAY "TP02 - CALCULO DE SALARIO" AT 0230.
-      *DISPLAY "NOME: " AT 0405 wsnm AT 0425.
-      *DISPLAY "SOBRENOME: " AT 0505 wssobnm AT 0525.
-      *DISPLAY "PRONTUARIO: " AT 0605 wspront AT 0625.
-      *DISPLAY "VALOR DA HORA: " AT 0705 wsvlhr AT 0725.
-      * DISPLAY "QTDE H/TRABALHADAS: " AT 0805 wsqthr AT 0825.
-      * DISPLAY "QTDE DE DEP: " AT 0905 wsqtdep AT 0925.
-      * DISPLAY " ".
-      * DISPLAY "SALARIO BRUTO: " AT 1105 wsbto.
-      * DISPLAY "INSS: " AT 1205 wsinss.
-      * DISPLAY "IRRF: " AT 1305 wsir.
-      * DISPLAY "SALARIO LIQUIDO: " AT 1405 wsliq.
-      * DISPLAY " ".
-       STOP RUN.
+           DISPLAY "TP02 - CALCULO DE SALARIO" at 0123.
+           DISPLAY "NOME: " at 0303 wsmascnm at 0323.
+           DISPLAY "SOBRENOME: " at 0403 wsmascsobnm at 0423.
+           DISPLAY "PRONTUARIO: " at 0503 wspront at 0523.
+           DISPLAY "VALOR DA HORA: " at 0603 wsmascvlhr at 0623.
+           DISPLAY "QTDE H/TRABALHADAS: " at 0703 wsmascqthr at 0723.
+           DISPLAY "QTDE DE DEP: " at 0803 wsmascqtdep at 0823.
+           DISPLAY " ".
+           DISPLAY "SALARIO BRUTO: " at 1003 wsbto at 1023.
+           DISPLAY "INSS: " at 1103 wsinss at 1123.
+           DISPLAY "IRRF: " at 1203 wsir at 1223. 
+           DISPLAY "SALARIO LIQUIDO: " at 1303 wsliq at 1323.
+           DISPLAY " ".
+           DISPLAY wsmascnm at 1501.
+           DISPLAY wsmascsobnm at 1521.
+           DISPLAY wspront at 1546.
+           DISPLAY wsbto at 1555.
+           DISPLAY wsliq at 1562.
+           DISPLAY " ".
+           STOP "Pressione enter...".
+           STOP RUN.
       *----------------------------------------------------------------*
